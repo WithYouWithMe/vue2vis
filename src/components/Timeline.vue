@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import { DataSet, DataView, Timeline } from 'vis';
+import { Timeline } from 'vis-timeline/standalone';
+import { DataSet, DataView } from "vis-data";
 import { mountVisData, translateEvent } from '../utils';
 
 export default {
@@ -48,12 +49,6 @@ export default {
       type: Object
     },
   },
-  data: () => ({
-    visData: {
-      items: null,
-      groups: null,
-    },
-  }),
   watch: {
     options: {
       deep: true,
@@ -157,13 +152,10 @@ export default {
   mounted() {
     const container = this.$refs.visualization;
 
-    this.visData.items = mountVisData(this, 'items');
-
     if (this.groups && this.groups.length > 0) {
-      this.visData.groups = mountVisData(this, 'groups');
-      this.timeline = new Timeline(container, this.visData.items, this.visData.groups, this.options);
+      this.timeline = new Timeline(container, this.items, this.groups, this.options);
     } else {
-      this.timeline = new Timeline(container, this.visData.items, this.options);
+      this.timeline = new Timeline(container, this.items, this.options);
     }
 
     this.events.forEach(eventName =>
@@ -176,7 +168,9 @@ export default {
     this.timeline = null;
   },
   beforeDestroy() {
-    this.timeline.destroy();
-  }
+    if (this.timeline) {
+      this.timeline.destroy();
+    }
+  },
 };
 </script>
