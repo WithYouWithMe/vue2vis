@@ -32,7 +32,7 @@ config.output = {
   path: path.resolve(__dirname, '../dist'),
   filename: 'vue2vis.js',
   library: ['vue2vis'],
-  libraryTarget: 'umd',
+  libraryTarget: 'commonjs',
   globalObject: 'this',
 };
 
