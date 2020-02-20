@@ -12,7 +12,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "lint": "eslint src/* test/*",
-    "beforePublish": "npm run lint && npm run build"
+    "beforePublish": "yarn lint && yarn build"
   },
   "repository": {
     "type": "git",
