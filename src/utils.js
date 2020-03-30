@@ -1,17 +1,19 @@
-import { DataSet, DataView } from 'vis';
+import { DataSet, DataView } from 'vis-data/peer';
 
-const arrayDiff = (arr1, arr2) => arr1.filter(x => arr2.indexOf(x) === -1);
+export function arrayDiff(arr1, arr2) {
+  return arr1.filter(x => arr2.indexOf(x) === -1);
+}
 
-const mountVisData = (vm, propName) => {
+export function mountVisData(vm, propName) {
   let data = vm[propName];
   // If data is DataSet or DataView we return early without attaching our own events
-  if (!(vm[propName] instanceof DataSet || vm[propName] instanceof DataView)) {
-    data = new DataSet(vm[propName]);
+  if (!(data instanceof DataSet || data instanceof DataView)) {
+    data = new DataSet(data);
     // Rethrow all events
     data.on('*', (event, properties, senderId) =>
       vm.$emit(`${propName}-${event}`, { event, properties, senderId }));
     // We attach deep watcher on the prop to propagate changes in the DataSet
-    const callback = (value) => {
+    const callback = value => {
       if (Array.isArray(value)) {
         const newIds = new DataSet(value).getIds();
         const diff = arrayDiff(vm.visData[propName].getIds(), newIds);
@@ -31,12 +33,6 @@ const mountVisData = (vm, propName) => {
   return data;
 };
 
-const translateEvent = (event) => {
+export function translateEvent(event) {
   return event.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-};
-
-export {
-  arrayDiff,
-  mountVisData,
-  translateEvent
 };
